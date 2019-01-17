@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="大数据,sqoop,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1.用sqoop进行表之间的转换1.1安装sqoop见资料库： (1)将tar包导入HDFS上12345我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压cd /export/softwarestar -zxvf sqoop-1.4.6-cdh5.14.0.tar.gz -C ../servers/">
+<meta name="keywords" content="大数据,sqoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sqoop 定时增量导入">
+<meta property="og:url" content="http://yoursite.com/2019/01/17/sqoop-定时增量导入/index.html">
+<meta property="og:site_name" content="TODO">
+<meta property="og:description" content="1.用sqoop进行表之间的转换1.1安装sqoop见资料库： (1)将tar包导入HDFS上12345我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压cd /export/softwarestar -zxvf sqoop-1.4.6-cdh5.14.0.tar.gz -C ../servers/">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-01-17T21:35:40.143Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="sqoop 定时增量导入">
+<meta name="twitter:description" content="1.用sqoop进行表之间的转换1.1安装sqoop见资料库： (1)将tar包导入HDFS上12345我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压cd /export/softwarestar -zxvf sqoop-1.4.6-cdh5.14.0.tar.gz -C ../servers/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'TODO'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/17/sqoop-定时增量导入/">
+
+
+
+
+
+  <title>sqoop 定时增量导入 | TODO</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">TODO</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/17/sqoop-定时增量导入/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="TODO">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">sqoop 定时增量导入</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-01-17T21:53:48+08:00">
+                2019-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/大数据/" itemprop="url" rel="index">
+                    <span itemprop="name">大数据</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-用sqoop进行表之间的转换"><a href="#1-用sqoop进行表之间的转换" class="headerlink" title="1.用sqoop进行表之间的转换"></a>1.用sqoop进行表之间的转换</h3><h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：</p>
+<h4 id="1-将tar包导入HDFS上"><a href="#1-将tar包导入HDFS上" class="headerlink" title="(1)将tar包导入HDFS上"></a>(1)将tar包导入HDFS上</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压</span><br><span class="line"></span><br><span class="line">cd /export/softwares</span><br><span class="line"></span><br><span class="line">tar -zxvf sqoop-<span class="number">1.4</span>.6-cdh5.14.0.tar.gz -C ../servers/</span><br></pre></td></tr></table></figure>
+<a id="more"></a> 
+<h4 id="2-修改配置文件"><a href="#2-修改配置文件" class="headerlink" title="(2)修改配置文件"></a>(2)修改配置文件</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-<span class="number">1.4</span>.6-cdh5.14.0/conf/</span><br><span class="line"></span><br><span class="line">cp sqoop-env-template.sh  sqoop-env.sh</span><br><span class="line"></span><br><span class="line">vim sqoop-env.sh</span><br><span class="line"></span><br><span class="line">export HADOOP_COMMON_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HADOOP_MAPRED_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HIVE_HOME=/export/servers/hive-<span class="number">1.1</span>.0-cdh5.14.0</span><br></pre></td></tr></table></figure>
+<p> (3)加入额外的依赖包(不加就会报错)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sqoop的使用需要添加两个额外的依赖包，一个是mysql的驱动包，一个是java-json的的依赖包，不然就会报错</span><br><span class="line"></span><br><span class="line">mysql-connector-java-5.1.40.jar</span><br><span class="line"></span><br><span class="line">java-json.jar</span><br><span class="line"></span><br><span class="line">将这个两个jar包添加到sqoop的lib目录下</span><br></pre></td></tr></table></figure>
+<h4 id="4-验证启动"><a href="#4-验证启动" class="headerlink" title="(4)验证启动"></a>(4)验证启动</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-1.4.6-cdh5.14.0</span><br><span class="line"></span><br><span class="line">bin/sqoop-version</span><br></pre></td></tr></table></figure>
+<h4 id="1-2-导入的命令行-全表导入"><a href="#1-2-导入的命令行-全表导入" class="headerlink" title="1.2 导入的命令行(全表导入)"></a>1.2 导入的命令行(全表导入)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import  --connect jdbc:mysql://172.16.43.67:3306/userdb --username root --password admin --delete-target-dir --table emp  --target-dir /sqoop/emp2 --m 1 --fields-terminated-by '\t'</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--delete-target-dir 在指定文件夹的时候，如果有文件的话直接删除，然后创建</span><br></pre></td></tr></table></figure>
+<p>结合参见(有些未必对)：<a href="http://www.hadooptechs.com/sqoop/sqoop-incremental-import-mysql-to-hive" target="_blank" rel="noopener">http://www.hadooptechs.com/sqoop/sqoop-incremental-import-mysql-to-hive</a></p>
+<p>​                     </p>
+<h4 id="1-3-定时增量导入-结合job进行增量导入"><a href="#1-3-定时增量导入-结合job进行增量导入" class="headerlink" title="1.3 定时增量导入(结合job进行增量导入)"></a>1.3 定时增量导入(结合job进行增量导入)</h4><p>（1）append方式</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --create incrementalImportJob -- <span class="keyword">import</span> --connect jdbc:mysql:<span class="comment">//bigdata:3306/sqoop -username root --password mysql --table bigdata  --check-column class_id --incremental append --last-value 7 -m 1</span></span><br></pre></td></tr></table></figure>
+<p>（2）lastmodified方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --create incrementalImportJob import --connect jdbc:mysql://centos:3306/sqooptest --table bigdata --username root --password 123456 --check-column last_mod_ts --incremental lastmodified --last-value &quot;2016-10-03 22:39:43&quot; --merge-key class_id -m 1</span><br></pre></td></tr></table></figure>
+<p> <a href="https://ask.hellobi.com/blog/niupoop/9162" target="_blank" rel="noopener">https://ask.hellobi.com/blog/niupoop/9162</a></p>
+<h3 id="2-总结及相关问题"><a href="#2-总结及相关问题" class="headerlink" title="2  总结及相关问题"></a>2  总结及相关问题</h3><p>总结：先导入全表，然后用sqoop 中的last-value 和 incremental API来进行</p>
+<p>（1）对于冗余的解决办法是利用hive临时表进行比对来解决数据是否冗余的问题（lastmodified  这个会造成数据的重复和冗余）</p>
+<p>（2）增量数据的解决，如果用的是sqoop，使用自增的pk来解决，如果是用日期的的话会发生数据的冗余。解决办法用hive的临时表解决（如何用hive临时表解决冗余办法，这个原理我并不清楚）。或者使用lastupdate 然后再使用 –merge-key class_id （但是我不确定使用merge-key会不会导致进行全表查询见<a href="https://ask.hellobi.com/blog/niupoop/9162）" target="_blank" rel="noopener">https://ask.hellobi.com/blog/niupoop/9162）</a></p>
+<p>（3）为什么要创建jobr任务？？</p>
+<p>答：利用sqoop创建job任务，来进行last-value的修改及更新（sqoop已经给我们封装好了如何修改last-value，不用我们去解析日志然后，再对last-value 进行修改了）</p>
+<p><a href="https://blog.csdn.net/a280966503/article/details/79024890" target="_blank" rel="noopener">https://blog.csdn.net/a280966503/article/details/79024890</a></p>
+<p>（4）如果是pk 就用append，如果是时间戳就用Lastmodified</p>
+<p>原理见：<a href="http://shiyanjun.cn/archives/621.html" target="_blank" rel="noopener">http://shiyanjun.cn/archives/621.html</a></p>
+<p>（5）下面是将hdfs文件合并到本地（我没有做找到一个将sqoop文件小文件join成一个大表，但是如果按照天导入的时候就不会出现这样的情况，一般情况下是导入到hive中去，hive在配置文件中有一个自动合并的动能）（6）优选还是按照更新时间来进行拉取数据，然后根据这个时间让sqoop进行导入，然后通过sqoop导入到hive当中去，而后利用hive的分区来进行按照时间进行分类。就算用last update有冗余，然后用merge-key 冗余也就可以避免见<a href="http://patamon.me/icemimosa/hive/hive%E5%A4%84%E7%90%86%E5%A2%9E%E9%87%8F%E6%95%B0%E6%8D%AE/" target="_blank" rel="noopener">http://patamon.me/icemimosa/hive/hive%E5%A4%84%E7%90%86%E5%A2%9E%E9%87%8F%E6%95%B0%E6%8D%AE/</a></p>
+<p>（7）如果没有更新时间戳的话，那么关系表就会有进行篡改的可能性。</p>
+<p>（8）我们在创建job任务之后，就会发现每次需要输入数据库密码这时候我们按照以下步骤进行</p>
+<p>在sqoop-site.xml 见<a href="https://www.cnblogs.com/xiaodf/p/6030102.html" target="_blank" rel="noopener">https://www.cnblogs.com/xiaodf/p/6030102.html</a></p>
+<p>第一个是修改（sqoop-site.xml）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;sqoop.metastore.client.record.password&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<p>第二个是开启客户端共享在（sqoop/bin目录下启动）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop metastore</span><br></pre></td></tr></table></figure>
+<p>这样就可以不用输入密码进行定时的任务调度了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+          
+            <a href="/tags/sqoop/" rel="tag"># sqoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/31/test-my-site /" rel="next" title="MyFirstBlog">
+                <i class="fa fa-chevron-left"></i> MyFirstBlog
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="John Doe">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-用sqoop进行表之间的转换"><span class="nav-number">1.</span> <span class="nav-text">1.用sqoop进行表之间的转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1安装sqoop"><span class="nav-number">1.1.</span> <span class="nav-text">1.1安装sqoop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-将tar包导入HDFS上"><span class="nav-number">1.2.</span> <span class="nav-text">(1)将tar包导入HDFS上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-修改配置文件"><span class="nav-number">1.3.</span> <span class="nav-text">(2)修改配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-验证启动"><span class="nav-number">1.4.</span> <span class="nav-text">(4)验证启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-导入的命令行-全表导入"><span class="nav-number">1.5.</span> <span class="nav-text">1.2 导入的命令行(全表导入)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-定时增量导入-结合job进行增量导入"><span class="nav-number">1.6.</span> <span class="nav-text">1.3 定时增量导入(结合job进行增量导入)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-总结及相关问题"><span class="nav-number">2.</span> <span class="nav-text">2  总结及相关问题</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
