@@ -88,7 +88,8 @@
 <meta property="og:description" content="这里使用sqoop1的版本，下载之">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/sqoop-定时增量导入/sqoop-定时增量导入">
-<meta property="og:updated_time" content="2019-01-19T01:22:36.237Z">
+<meta property="og:image" content="http://yoursite.com/2019/01/17/sqoop-定时增量导入/tiantian.jpg">
+<meta property="og:updated_time" content="2019-01-19T01:37:05.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqoop 定时增量导入">
 <meta name="twitter:description" content="这里使用sqoop1的版本，下载之">
@@ -362,7 +363,8 @@
 
 <p><img src="/sqoop-定时增量导入/sqoop-定时增量导入"> </p>
 <a id="more"></a> 
-<h3 id="1-用sqoop进行表之间的转换"><a href="#1-用sqoop进行表之间的转换" class="headerlink" title="1.用sqoop进行表之间的转换"></a>1.用sqoop进行表之间的转换</h3><h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：</p>
+<h3 id="1-用sqoop进行表之间的转换"><a href="#1-用sqoop进行表之间的转换" class="headerlink" title="1.用sqoop进行表之间的转换"></a>1.用sqoop进行表之间的转换</h3><img src="/2019/01/17/sqoop-定时增量导入/tiantian.jpg">  
+<h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：</p>
 <h4 id="1-将tar包导入HDFS上"><a href="#1-将tar包导入HDFS上" class="headerlink" title="(1)将tar包导入HDFS上"></a>(1)将tar包导入HDFS上</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压</span><br><span class="line"></span><br><span class="line">cd /export/softwares</span><br><span class="line"></span><br><span class="line">tar -zxvf sqoop-<span class="number">1.4</span>.6-cdh5.14.0.tar.gz -C ../servers/</span><br></pre></td></tr></table></figure>
 <h4 id="2-修改配置文件"><a href="#2-修改配置文件" class="headerlink" title="(2)修改配置文件"></a>(2)修改配置文件</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-<span class="number">1.4</span>.6-cdh5.14.0/conf/</span><br><span class="line"></span><br><span class="line">cp sqoop-env-template.sh  sqoop-env.sh</span><br><span class="line"></span><br><span class="line">vim sqoop-env.sh</span><br><span class="line"></span><br><span class="line">export HADOOP_COMMON_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HADOOP_MAPRED_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HIVE_HOME=/export/servers/hive-<span class="number">1.1</span>.0-cdh5.14.0</span><br></pre></td></tr></table></figure>
 <p> (3)加入额外的依赖包(不加就会报错)</p>
@@ -545,6 +547,22 @@
 
           
 
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/stanford2299" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:satan2299@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
           
 
           
