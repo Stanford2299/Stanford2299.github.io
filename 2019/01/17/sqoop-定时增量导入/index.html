@@ -79,21 +79,18 @@
 
 
 
-<meta name="description" content="这里使用sqoop1的版本，下载之">
+<meta name="description" content="为了解决关系表之间,关系表和数据仓库之间的导入导出,相互转换.出了一款sqoop的工具,款工具就是用于表间的转换.本文介绍sqoop工具环境的安装及出现的一些问题.特别是sqoop定时导入hive中出现的问题和解决方法.">
 <meta name="keywords" content="大数据,sqoop">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sqoop 定时增量导入">
 <meta property="og:url" content="http://yoursite.com/2019/01/17/sqoop-定时增量导入/index.html">
 <meta property="og:site_name" content="Simple">
-<meta property="og:description" content="这里使用sqoop1的版本，下载之">
+<meta property="og:description" content="为了解决关系表之间,关系表和数据仓库之间的导入导出,相互转换.出了一款sqoop的工具,款工具就是用于表间的转换.本文介绍sqoop工具环境的安装及出现的一些问题.特别是sqoop定时导入hive中出现的问题和解决方法.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/sqoop-定时增量导入/sqoop-定时增量导入">
-<meta property="og:image" content="http://yoursite.com/2019/01/17/sqoop-定时增量导入/tiantian.jpg">
-<meta property="og:updated_time" content="2019-01-19T01:37:05.876Z">
+<meta property="og:updated_time" content="2019-01-19T02:56:06.499Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqoop 定时增量导入">
-<meta name="twitter:description" content="这里使用sqoop1的版本，下载之">
-<meta name="twitter:image" content="http://yoursite.com/sqoop-定时增量导入/sqoop-定时增量导入">
+<meta name="twitter:description" content="为了解决关系表之间,关系表和数据仓库之间的导入导出,相互转换.出了一款sqoop的工具,款工具就是用于表间的转换.本文介绍sqoop工具环境的安装及出现的一些问题.特别是sqoop定时导入hive中出现的问题和解决方法.">
 
 
 
@@ -103,7 +100,7 @@
     root: '/',
     scheme: 'Mist',
     version: '5.1.4',
-    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -341,10 +338,6 @@
           
 
           
-              <div class="post-description">
-                  这里使用sqoop1的版本，下载之
-              </div>
-          
 
         </div>
       </header>
@@ -359,27 +352,28 @@
       
 
       
-        <blockquote class="blockquote-center">sqoop 增量导入</blockquote> 
-
-<p><img src="/sqoop-定时增量导入/sqoop-定时增量导入"> </p>
+        <p> 为了解决关系表之间,关系表和数据仓库之间的导入导出,相互转换.出了一款sqoop的工具,款工具就是用于表间的转换.本文介绍sqoop工具环境的安装及出现的一些问题.特别是sqoop定时导入hive中出现的问题和解决方法.</p>
 <a id="more"></a> 
-<h3 id="1-用sqoop进行表之间的转换"><a href="#1-用sqoop进行表之间的转换" class="headerlink" title="1.用sqoop进行表之间的转换"></a>1.用sqoop进行表之间的转换</h3><img src="/2019/01/17/sqoop-定时增量导入/tiantian.jpg">  
-<h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：</p>
-<h4 id="1-将tar包导入HDFS上"><a href="#1-将tar包导入HDFS上" class="headerlink" title="(1)将tar包导入HDFS上"></a>(1)将tar包导入HDFS上</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压</span><br><span class="line"></span><br><span class="line">cd /export/softwares</span><br><span class="line"></span><br><span class="line">tar -zxvf sqoop-<span class="number">1.4</span>.6-cdh5.14.0.tar.gz -C ../servers/</span><br></pre></td></tr></table></figure>
-<h4 id="2-修改配置文件"><a href="#2-修改配置文件" class="headerlink" title="(2)修改配置文件"></a>(2)修改配置文件</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-<span class="number">1.4</span>.6-cdh5.14.0/conf/</span><br><span class="line"></span><br><span class="line">cp sqoop-env-template.sh  sqoop-env.sh</span><br><span class="line"></span><br><span class="line">vim sqoop-env.sh</span><br><span class="line"></span><br><span class="line">export HADOOP_COMMON_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HADOOP_MAPRED_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HIVE_HOME=/export/servers/hive-<span class="number">1.1</span>.0-cdh5.14.0</span><br></pre></td></tr></table></figure>
+<h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：<a href="https://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">https://archive.cloudera.com/cdh5/cdh/5/</a> 找到 sqoop-1.4.6-cdh5.14.0.tar.gz</p>
+<p>(1)将tar包导入HDFS上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压</span><br><span class="line"></span><br><span class="line">cd /export/softwares</span><br><span class="line"></span><br><span class="line">tar -zxvf sqoop-<span class="number">1.4</span>.6-cdh5.14.0.tar.gz -C ../servers/</span><br></pre></td></tr></table></figure>
+<p>(2)修改配置文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-<span class="number">1.4</span>.6-cdh5.14.0/conf/</span><br><span class="line"></span><br><span class="line">cp sqoop-env-template.sh  sqoop-env.sh</span><br><span class="line"></span><br><span class="line">vim sqoop-env.sh</span><br><span class="line"></span><br><span class="line">export HADOOP_COMMON_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HADOOP_MAPRED_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HIVE_HOME=/export/servers/hive-<span class="number">1.1</span>.0-cdh5.14.0</span><br></pre></td></tr></table></figure>
 <p> (3)加入额外的依赖包(不加就会报错)</p>
+<p>第一个:<a href="https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.4" target="_blank" rel="noopener">https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.4</a></p>
+<p>第二个:百度搜索java-json.jar</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sqoop的使用需要添加两个额外的依赖包，一个是mysql的驱动包，一个是java-json的的依赖包，不然就会报错</span><br><span class="line"></span><br><span class="line">mysql-connector-java-5.1.40.jar</span><br><span class="line"></span><br><span class="line">java-json.jar</span><br><span class="line"></span><br><span class="line">将这个两个jar包添加到sqoop的lib目录下</span><br></pre></td></tr></table></figure>
-<h4 id="4-验证启动"><a href="#4-验证启动" class="headerlink" title="(4)验证启动"></a>(4)验证启动</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-1.4.6-cdh5.14.0</span><br><span class="line"></span><br><span class="line">bin/sqoop-version</span><br></pre></td></tr></table></figure>
+<p>(4)验证启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-1.4.6-cdh5.14.0</span><br><span class="line"></span><br><span class="line">bin/sqoop-version</span><br></pre></td></tr></table></figure>
 <h4 id="1-2-导入的命令行-全表导入"><a href="#1-2-导入的命令行-全表导入" class="headerlink" title="1.2 导入的命令行(全表导入)"></a>1.2 导入的命令行(全表导入)</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/sqoop import  --connect jdbc:mysql://172.16.43.67:3306/userdb --username root --password admin --delete-target-dir --table emp  --target-dir /sqoop/emp2 --m 1 --fields-terminated-by '\t'</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--delete-target-dir 在指定文件夹的时候，如果有文件的话直接删除，然后创建</span><br></pre></td></tr></table></figure>
-<p>结合参见(有些未必对)：<a href="http://www.hadooptechs.com/sqoop/sqoop-incremental-import-mysql-to-hive" target="_blank" rel="noopener">http://www.hadooptechs.com/sqoop/sqoop-incremental-import-mysql-to-hive</a></p>
-<p>​                     </p>
+<p>结合参见(有些未必对)：<a href="http://www.hadooptechs.com/sqoop/sqoop-incremental-import-mysql-to-hive" target="_blank" rel="noopener">http://www.hadooptechs.com/sqoop/sqoop-incremental-import-mysql-to-hive</a>             </p>
 <h4 id="1-3-定时增量导入-结合job进行增量导入"><a href="#1-3-定时增量导入-结合job进行增量导入" class="headerlink" title="1.3 定时增量导入(结合job进行增量导入)"></a>1.3 定时增量导入(结合job进行增量导入)</h4><p>（1）append方式</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --create incrementalImportJob -- <span class="keyword">import</span> --connect jdbc:mysql:<span class="comment">//bigdata:3306/sqoop -username root --password mysql --table bigdata  --check-column class_id --incremental append --last-value 7 -m 1</span></span><br></pre></td></tr></table></figure>
 <p>（2）lastmodified方式</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sqoop job --create incrementalImportJob import --connect jdbc:mysql://centos:3306/sqooptest --table bigdata --username root --password 123456 --check-column last_mod_ts --incremental lastmodified --last-value &quot;2016-10-03 22:39:43&quot; --merge-key class_id -m 1</span><br></pre></td></tr></table></figure>
 <p> <a href="https://ask.hellobi.com/blog/niupoop/9162" target="_blank" rel="noopener">https://ask.hellobi.com/blog/niupoop/9162</a></p>
-<h3 id="2-总结及相关问题"><a href="#2-总结及相关问题" class="headerlink" title="2  总结及相关问题"></a>2  总结及相关问题</h3><p>总结：先导入全表，然后用sqoop 中的last-value 和 incremental API来进行</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>总结：先导入全表，然后用sqoop 中的last-value 和 incremental API来进行</p>
 <p>（1）对于冗余的解决办法是利用hive临时表进行比对来解决数据是否冗余的问题（lastmodified  这个会造成数据的重复和冗余）</p>
 <p>（2）增量数据的解决，如果用的是sqoop，使用自增的pk来解决，如果是用日期的的话会发生数据的冗余。解决办法用hive的临时表解决（如何用hive临时表解决冗余办法，这个原理我并不清楚）。或者使用lastupdate 然后再使用 –merge-key class_id （但是我不确定使用merge-key会不会导致进行全表查询见<a href="https://ask.hellobi.com/blog/niupoop/9162）" target="_blank" rel="noopener">https://ask.hellobi.com/blog/niupoop/9162）</a></p>
 <p>（3）为什么要创建jobr任务？？</p>
@@ -413,9 +407,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/大数据/" rel="tag"># 大数据</a>
+            <a href="/tags/大数据/" rel="tag"><i class="fa fa-tag"></i>大数据</a>
           
-            <a href="/tags/sqoop/" rel="tag"># sqoop</a>
+            <a href="/tags/sqoop/" rel="tag"><i class="fa fa-tag"></i>sqoop</a>
           
         </div>
       
@@ -505,7 +499,7 @@
               <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="SimpleChen">
             
               <p class="site-author-name" itemprop="name">SimpleChen</p>
-              <p class="site-description motion-element" itemprop="description">Why are you looking farther and farther on your own path? -evolution</p>
+              <p class="site-description motion-element" itemprop="description">Progress Evolution</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -586,7 +580,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-用sqoop进行表之间的转换"><span class="nav-number">1.</span> <span class="nav-text">1.用sqoop进行表之间的转换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1安装sqoop"><span class="nav-number">1.1.</span> <span class="nav-text">1.1安装sqoop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-将tar包导入HDFS上"><span class="nav-number">1.2.</span> <span class="nav-text">(1)将tar包导入HDFS上</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-修改配置文件"><span class="nav-number">1.3.</span> <span class="nav-text">(2)修改配置文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-验证启动"><span class="nav-number">1.4.</span> <span class="nav-text">(4)验证启动</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-导入的命令行-全表导入"><span class="nav-number">1.5.</span> <span class="nav-text">1.2 导入的命令行(全表导入)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-定时增量导入-结合job进行增量导入"><span class="nav-number">1.6.</span> <span class="nav-text">1.3 定时增量导入(结合job进行增量导入)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-总结及相关问题"><span class="nav-number">2.</span> <span class="nav-text">2  总结及相关问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1安装sqoop"><span class="nav-number">1.</span> <span class="nav-text">1.1安装sqoop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-导入的命令行-全表导入"><span class="nav-number">2.</span> <span class="nav-text">1.2 导入的命令行(全表导入)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-定时增量导入-结合job进行增量导入"><span class="nav-number">3.</span> <span class="nav-text">1.3 定时增量导入(结合job进行增量导入)</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number"></span> <span class="nav-text">小结</span></a></li></div>
             
 
           </div>
