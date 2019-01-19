@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="1.用sqoop进行表之间的转换1.1安装sqoop见资料库： (1)将tar包导入HDFS上12345我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压cd /export/softwarestar -zxvf sqoop-1.4.6-cdh5.14.0.tar.gz -C ../servers/">
+<meta name="description" content="这里使用sqoop1的版本，下载之">
 <meta name="keywords" content="大数据,sqoop">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sqoop 定时增量导入">
 <meta property="og:url" content="http://yoursite.com/2019/01/17/sqoop-定时增量导入/index.html">
 <meta property="og:site_name" content="简-Simple">
-<meta property="og:description" content="1.用sqoop进行表之间的转换1.1安装sqoop见资料库： (1)将tar包导入HDFS上12345我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压cd /export/softwarestar -zxvf sqoop-1.4.6-cdh5.14.0.tar.gz -C ../servers/">
+<meta property="og:description" content="这里使用sqoop1的版本，下载之">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-17T21:35:40.143Z">
+<meta property="og:image" content="http://yoursite.com/sqoop-定时增量导入/sqoop-定时增量导入">
+<meta property="og:updated_time" content="2019-01-19T01:18:42.365Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sqoop 定时增量导入">
-<meta name="twitter:description" content="1.用sqoop进行表之间的转换1.1安装sqoop见资料库： (1)将tar包导入HDFS上12345我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压cd /export/softwarestar -zxvf sqoop-1.4.6-cdh5.14.0.tar.gz -C ../servers/">
+<meta name="twitter:description" content="这里使用sqoop1的版本，下载之">
+<meta name="twitter:image" content="http://yoursite.com/sqoop-定时增量导入/sqoop-定时增量导入">
 
 
 
@@ -338,6 +340,10 @@
           
 
           
+              <div class="post-description">
+                  这里使用sqoop1的版本，下载之
+              </div>
+          
 
         </div>
       </header>
@@ -352,9 +358,12 @@
       
 
       
-        <h3 id="1-用sqoop进行表之间的转换"><a href="#1-用sqoop进行表之间的转换" class="headerlink" title="1.用sqoop进行表之间的转换"></a>1.用sqoop进行表之间的转换</h3><h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：</p>
-<h4 id="1-将tar包导入HDFS上"><a href="#1-将tar包导入HDFS上" class="headerlink" title="(1)将tar包导入HDFS上"></a>(1)将tar包导入HDFS上</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压</span><br><span class="line"></span><br><span class="line">cd /export/softwares</span><br><span class="line"></span><br><span class="line">tar -zxvf sqoop-<span class="number">1.4</span>.6-cdh5.14.0.tar.gz -C ../servers/</span><br></pre></td></tr></table></figure>
+        <blockquote class="blockquote-center">sqoop 增量导入</blockquote> 
+
+<p><img src="/sqoop-定时增量导入/sqoop-定时增量导入"> </p>
 <a id="more"></a> 
+<h3 id="1-用sqoop进行表之间的转换"><a href="#1-用sqoop进行表之间的转换" class="headerlink" title="1.用sqoop进行表之间的转换"></a>1.用sqoop进行表之间的转换</h3><h4 id="1-1安装sqoop"><a href="#1-1安装sqoop" class="headerlink" title="1.1安装sqoop"></a>1.1安装sqoop</h4><p>见资料库：</p>
+<h4 id="1-将tar包导入HDFS上"><a href="#1-将tar包导入HDFS上" class="headerlink" title="(1)将tar包导入HDFS上"></a>(1)将tar包导入HDFS上</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">我们这里使用sqoop1的版本，下载之后上传到/export/softwares目录下，然后进行解压</span><br><span class="line"></span><br><span class="line">cd /export/softwares</span><br><span class="line"></span><br><span class="line">tar -zxvf sqoop-<span class="number">1.4</span>.6-cdh5.14.0.tar.gz -C ../servers/</span><br></pre></td></tr></table></figure>
 <h4 id="2-修改配置文件"><a href="#2-修改配置文件" class="headerlink" title="(2)修改配置文件"></a>(2)修改配置文件</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd /export/servers/sqoop-<span class="number">1.4</span>.6-cdh5.14.0/conf/</span><br><span class="line"></span><br><span class="line">cp sqoop-env-template.sh  sqoop-env.sh</span><br><span class="line"></span><br><span class="line">vim sqoop-env.sh</span><br><span class="line"></span><br><span class="line">export HADOOP_COMMON_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HADOOP_MAPRED_HOME=/export/servers/hadoop-<span class="number">2.6</span>.0-cdh5.14.0</span><br><span class="line"></span><br><span class="line">export HIVE_HOME=/export/servers/hive-<span class="number">1.1</span>.0-cdh5.14.0</span><br></pre></td></tr></table></figure>
 <p> (3)加入额外的依赖包(不加就会报错)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sqoop的使用需要添加两个额外的依赖包，一个是mysql的驱动包，一个是java-json的的依赖包，不然就会报错</span><br><span class="line"></span><br><span class="line">mysql-connector-java-5.1.40.jar</span><br><span class="line"></span><br><span class="line">java-json.jar</span><br><span class="line"></span><br><span class="line">将这个两个jar包添加到sqoop的lib目录下</span><br></pre></td></tr></table></figure>
@@ -525,10 +534,10 @@
               
               
               <div class="site-state-item site-state-tags">
-                
-                  <span class="site-state-item-count">2</span>
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">标签</span>
-                
+                </a>
               </div>
             
 
